@@ -1,68 +1,35 @@
 # Grep
 
-Search a file for lines matching a regular expression pattern. Return the line
-number and contents of each matching line.
+Welcome to Grep on Exercism's Bash Track.
+If you need help running the tests or submitting your code, check out `HELP.md`.
 
-The Unix [`grep`](http://pubs.opengroup.org/onlinepubs/9699919799/utilities/grep.html) command can be used to search for lines in one or more files
-that match a user-provided search query (known as the *pattern*).
+## Instructions
+
+Search files for lines matching a search string and return all matching lines.
+
+The Unix [`grep`][grep] command searches files for lines that match a regular expression.
+Your task is to implement a simplified `grep` command, which supports searching for fixed strings.
 
 The `grep` command takes three arguments:
 
-1. The pattern used to match lines in a file.
-2. Zero or more flags to customize the matching behavior.
-3. One or more files in which to search for matching lines.
+1. The string to search for.
+2. Zero or more flags for customizing the command's behavior.
+3. One or more files to search in.
 
-Your task is to implement the `grep` function, which should read the contents
-of the specified files, find the lines that match the specified pattern
-and then output those lines as a single string. Note that the lines should
-be output in the order in which they were found, with the first matching line
-in the first file being output first.
+It then reads the contents of the specified files (in the order specified), finds the lines that contain the search string, and finally returns those lines in the order in which they were found.
+When searching in multiple files, each matching line is prepended by the file name and a colon (':').
 
-As an example, suppose there is a file named "input.txt" with the following contents:
+## Flags
 
-```text
-hello
-world
-hello again
-```
+The `grep` command supports the following flags:
 
-If we were to call `grep "hello" input.txt`, the returned string should be:
+- `-n` Prepend the line number and a colon (':') to each line in the output, placing the number after the filename (if present).
+- `-l` Output only the names of the files that contain at least one matching line.
+- `-i` Match using a case-insensitive comparison.
+- `-v` Invert the program -- collect all lines that fail to match.
+- `-x` Search only for lines where the search string matches the entire line.
 
-```text
-hello
-hello again
-```
-
-### Flags
-
-As said earlier, the `grep` command should also support the following flags:
-
-- `-n` Print the line numbers of each matching line.
-- `-l` Print only the names of files that contain at least one matching line.
-- `-i` Match line using a case-insensitive comparison.
-- `-v` Invert the program -- collect all lines that fail to match the pattern.
-- `-x` Only match entire lines, instead of lines that contain a match.
-
-If we run `grep -n "hello" input.txt`, the `-n` flag will require the matching
-lines to be prefixed with its line number:
-
-```text
-1:hello
-3:hello again
-```
-
-And if we run `grep -i "HELLO" input.txt`, we'll do a case-insensitive match,
-and the output will be:
-
-```text
-hello
-hello again
-```
-
-The `grep` command should support multiple flags at once.
-
-For example, running `grep -l -v "hello" file1.txt file2.txt` should
-print the names of files that do not contain the string "hello".
+[grep]: https://pubs.opengroup.org/onlinepubs/9699919799/utilities/grep.html
 
 ## To `grep` or not to `grep`, that is the question
 
@@ -80,49 +47,19 @@ To solve this exercise, you'll need to:
 
 ---
 
-
-
-Run the tests with:
-
-```bash
-bats grep_test.sh
-```
-
-After the first test(s) pass, continue by commenting out or removing the
-`[[ $BATS_RUN_SKIPPED == true ]] || skip` 
-annotations prepending other tests.
-
-To run all tests, including the ones with `skip` annotations, run:
-
-```bash
-BATS_RUN_SKIPPED=true bats grep_test.sh
-```
-
 ## Source
 
-Conversation with Nate Foster. [http://www.cs.cornell.edu/Courses/cs3110/2014sp/hw/0/ps0.pdf](http://www.cs.cornell.edu/Courses/cs3110/2014sp/hw/0/ps0.pdf)
+### Created by
 
+- @glennj
 
-## External utilities
-`Bash` is a language to write "scripts" -- programs that can call
-external tools, such as
-[`sed`](https://www.gnu.org/software/sed/),
-[`awk`](https://www.gnu.org/software/gawk/),
-[`date`](https://www.gnu.org/software/coreutils/manual/html_node/date-invocation.html)
-and even programs written in other programming languages, 
-like [`Python`](https://www.python.org/).
-This track does not restrict the usage of these utilities, and as long
-as your solution is portable between systems and does not require
-installation of third party applications, feel free to use them to solve
-the exercise.
+### Contributed to by
 
-For an extra challenge, if you would like to have a better understanding
-of the language, try to re-implement the solution in pure `Bash`,
-without using any external tools. Note that there are some types of
-problems that bash cannot solve, such as performing floating point
-arithmetic and manipulating dates: for those, you must call out to an
-external tool.
+- @bkhl
+- @guygastineau
+- @IsaacG
+- @kotp
 
-## Submitting Incomplete Solutions
-It's possible to submit an incomplete solution so you can see how others
-have completed the exercise.
+### Based on
+
+Conversation with Nate Foster. - https://www.cs.cornell.edu/Courses/cs3110/2014sp/hw/0/ps0.pdf

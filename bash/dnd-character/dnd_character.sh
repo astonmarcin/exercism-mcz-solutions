@@ -6,25 +6,28 @@ function modifier {
 	fi
 
 	modifier_output=$( bc <<< "$1/2-10/2")
+	echo -e "${modifier_output}"
 }
 
 function dice_roll {
 	for i in {0..3}; do
-		dice_roll_array+=($(($RANDOM%6+1)))
+		dice_roll_array+=($((RANDOM%6+1)))
 	done
-	dice_roll_output+=($(printf "%s\n" "${dice_roll_array[@]}" | sort -nr | head -n3))
+	dice_roll_output=()
+	while IFS='' read -r line; do
+	    dice_roll_output+=("${line}")
+	done < <(printf "%s\n" "${dice_roll_array[@]}" | sort -nr | head -n3)
 	unset dice_roll_array
 }
 
 function generate {
 	for i in {0..5}; do
 		dice_roll
-		skill+=($(( ${dice_roll_output[0]} + ${dice_roll_output[1]} + ${dice_roll_output[2]}  )))
+		skill+=($(( dice_roll_output[0] + dice_roll_output[1] + dice_roll_output[2] )))
 		unset dice_roll_output
 	done
 
-	modifier "${skill[2]}"
-	skill+=($(( 10 + $modifier_output )))
+	skill+=($(( 10 + $(modifier "${skill[2]}") )))
 
 	for i in {0..6}; do
 		case $i in
@@ -38,16 +41,15 @@ function generate {
 			*) exit 1 ;;
 		esac
 	done
+	echo -e "$generate_output"
 }
 
 function main {
 	if [[ "$1" == "modifier" ]]; then
-		modifier $2
-		echo $modifier_output
+		modifier "$2"
 		exit 0
 	elif [[ "$1" == "generate" ]]; then
 		generate
-		echo -e $generate_output
 		exit 0
 	else
 		echo "Usage:"

@@ -1,0 +1,39 @@
+def find_fewest_coins(coins, target):
+    if target < 0:
+        raise ValueError("target can't be negative")
+    if target == 0:
+        return []
+    if all([target % coin != 0 for coin in coins]):
+        raise ValueError("can't make target with given coins")
+
+    solutions = []
+    for idx in range(len(coins)-1, -1, -1):
+        if target // coins[idx] == 0:
+            continue
+        solutions.append([0] * len(coins))
+        print(" ")
+        print(idx, coins[idx])
+        temp = target
+        while temp > 0:
+            for sol_idx in range(idx, -1, -1):
+                solutions[-1][sol_idx] = temp // coins[sol_idx]
+                temp %= coins[sol_idx]
+            print(solutions[-1])
+            if temp != 0:
+                solutions[-1]
+    
+    print(solutions)
+    if not solutions:
+        raise ValueError("can't make target with given coins")
+
+    sums_of_coins = []
+    for idx, solution in enumerate(solutions):
+        sums_of_coins.append(sum(solution))
+
+    best_solution = solutions[sums_of_coins.index(min(sums_of_coins))]
+    output = []
+    for idx in range(len(coins)):
+        if best_solution[idx] != 0:
+            output.extend([coins[idx]] * best_solution[idx])
+    return output
+    return [coins[idx] for idx in range(len(coins)) for _ in range(best_solution[idx]) if best_solution[idx] != 0]

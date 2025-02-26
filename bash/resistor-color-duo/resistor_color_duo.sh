@@ -17,8 +17,13 @@ for i in 1 2; do
 		violet) output+="7";;
 		grey) output+="8";;
 		white) output+="9";;
-		*) echo "ERROR!"; exit 1;;
+		*) echo "invalid color"; exit 1;;
 	esac
 done
+
+if [[ $output =~ ^0 ]]; then
+    output=${output:1}
+fi
+    
 
 echo $output
