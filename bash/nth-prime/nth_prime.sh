@@ -1,37 +1,37 @@
 #!/usr/bin/env bash
 
 get_primes () {
-    output=( $(seq 2 $1) )
-    (( len_output = ${#output[@]} ))
-    (( output_elem_idx = 0 ))
-    while (( ( value = output[output_elem_idx] ) && value * value <= $1 )); do
-        for (( idx = output_elem_idx + 1; idx < len_output; ++idx )); do
-            if (( output[idx] % value == 0 )); then
-                unset output[idx]
-            fi
-        done
-        output=( ${output[*]} )
-        (( output_elem_idx++ ))
+    limit=$1
+    nth=$(($2-1))
+    is_primes=()
+    for (( i=2; i<=limit; i++ )); do
+        is_primes[i]="true"
     done
-    echo "${output[*]}"
+
+    for (( i=2; i*i<=limit; i++ )); do
+        if ${is_primes[i]}; then
+            (( i == 2 )) && step=2 || step=$((2*i))
+            for (( j=i*i; j<=limit; j+=step )); do
+                is_primes[j]=false
+            done
+        fi
+    done
+
+    output=()
+    for (( k=2; k<=limit; k++ )); do
+        ${is_primes[k]} && output+=("$k")
+    done
+
+    echo "${output[nth]}"
 }
 
 main () {
     (( $1 < 1 )) && { echo "invalid input"; exit 1; }
     
-    total=0
-    number="$1"
-    factor=2
-    primes=()
+    upper=$( printf "2 + 1.2 * %d * l(%d)\n" "$1" "$1" | bc -l )
+    upper="${upper%.*}"
 
-    while (( total < number )); do
-        primes_no=$(( number * factor ))
-        primes=( $(get_primes $primes_no ) )
-        total=${#primes[@]}
-        (( factor += 1 ))
-    done
-
-    echo "${primes[number-1]}"
+    get_primes "$upper" "$1"
 }
 
 main "$@"
